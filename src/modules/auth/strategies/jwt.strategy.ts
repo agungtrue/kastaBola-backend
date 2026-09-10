@@ -1,42 +1,66 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
-import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { User } from '../../users/entities/user.entity.js';
 import { Customer } from '../../customers/entities/customer.entity.js';
+import { AccountType, UserRole, CustomerRole } from '../../../common/enums/identity.enum.js';
 
 export interface JwtPayload {
-  sub: string; // Customer ID
+  sub: string;
   email: string;
-  role: string;
+  accountType: AccountType;
+  role: UserRole | CustomerRole;
 }
 
 @Injectable()
-export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
+export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor(
-    private configService: ConfigService,
+    @InjectRepository(User)
+    private readonly userRepository: Repository<User>,
     @InjectRepository(Customer)
-    private customerRepository: Repository<Customer>,
+    private readonly customerRepository: Repository<Customer>,
   ) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       ignoreExpiration: false,
-      secretOrKey: configService.get<string>('JWT_SECRET')!,
+      secretOrKey: process.env.JWT_SECRET || 'kastabola_super_secret_key_2026',
     });
   }
 
   async validate(payload: JwtPayload) {
-    const customer = await this.customerRepository.findOne({
-      where: { id: payload.sub, isActive: true },
-    });
-
-    if (!customer) {
-      throw new UnauthorizedException(
-        'Sesi pengguna tidak valid atau akun dinonaktifkan',
-      );
+    if (payload.accountType === AccountType.STAFF) {
+      const user = await this.userRepository.findOne({
+        where: { id: payload.sub, isActive: true },
+      });
+      if (!user) {
+        throw new UnauthorizedException('Sesi staff tidak valid atau non-aktif');
+      }
+      return {
+        id: user.id,
+        email: user.email,
+        role: user.role,
+        accountType: AccountType.STAFF,
+      };
     }
 
-    return customer;
+    if (payload.accountType === AccountType.CUSTOMER) {
+      const customer = await this.customerRepository.findOne({
+        where: { id: payload.sub, isActive: true },
+      });
+      if (!customer) {
+        throw new UnauthorizedException('Sesi customer tidak valid atau non-aktif');
+      }
+      return {
+        id: customer.id,
+        email: customer.email,
+        role: customer.role,
+        teamId: customer.teamId,
+        accountType: AccountType.CUSTOMER,
+      };
+    }
+
+    throw new UnauthorizedException('Tipe akun dalam token tidak dikenali');
   }
 }

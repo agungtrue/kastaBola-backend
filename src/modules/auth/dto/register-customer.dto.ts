@@ -1,3 +1,4 @@
+import { CustomerRole } from '../../../common/enums/identity.enum.js';
 import {
   IsEmail,
   IsNotEmpty,
@@ -5,6 +6,7 @@ import {
   IsString,
   MinLength,
   Matches,
+  IsEnum,
 } from 'class-validator';
 
 export class RegisterCustomerDto {
@@ -31,4 +33,8 @@ export class RegisterCustomerDto {
   @IsOptional()
   @IsString()
   nickname?: string;
+
+  @IsOptional()
+  @IsEnum(CustomerRole)
+  role?: CustomerRole;
 }

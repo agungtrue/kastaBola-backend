@@ -1,4 +1,4 @@
-import { Entity, Column, Index } from 'typeorm';
+import { Entity, Column, ManyToOne, JoinColumn, Index, Relation } from 'typeorm';
 import { BaseEntity } from '../../../common/entities/base.entity.js';
 import {
   CustomerRole,
@@ -6,8 +6,11 @@ import {
   PlayerPosition,
   DominantFoot,
 } from '../../../common/enums/identity.enum.js';
+import { Team } from '../../teams/entities/team.entity.js';
 
 @Entity('customers')
+@Index(['teamId', 'isActive', 'email'])
+@Index(['teamId', 'isActive', 'phone'])
 export class Customer extends BaseEntity {
   @Index({ unique: true })
   @Column({ type: 'varchar', length: 255, unique: true })
@@ -30,12 +33,15 @@ export class Customer extends BaseEntity {
   avatarUrl: string | null;
 
   @Column({
-    name: 'default_role',
+    name: 'role',
     type: 'enum',
     enum: CustomerRole,
     default: CustomerRole.PLAYER,
   })
-  defaultRole: CustomerRole;
+  role: CustomerRole;
+
+  @Column({ type: 'uuid', nullable: true })
+  teamId: string | null;
 
   @Column({
     type: 'enum',
@@ -71,4 +77,12 @@ export class Customer extends BaseEntity {
 
   @Column({ name: 'is_active', type: 'boolean', default: true })
   isActive: boolean;
+
+  @Column({ name: 'google_id', type: 'varchar', length: 255, nullable: true })
+  @Index()
+  googleId: string | null;
+
+  @ManyToOne(() => Team, { nullable: true, onDelete: 'SET NULL' })
+  @JoinColumn({ name: 'teamId' })
+  team: Relation<Team> | null;
 }

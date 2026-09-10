@@ -39,16 +39,16 @@ export class MatchEvent {
   type: MatchEventType;
 
   @Column({ type: 'enum', enum: CardType, nullable: true })
-  cardType: CardType;
+  cardType: CardType | null;
 
   @Column({ type: 'uuid', nullable: true })
-  scorerPlayerId: string;
+  scorerPlayerId: string | null;
 
   @Column({ type: 'uuid', nullable: true })
-  assistPlayerId: string;
+  assistPlayerId: string | null;
 
   @Column({ type: 'uuid', nullable: true })
-  targetPlayerId: string;
+  targetPlayerId: string | null;
 
   @CreateDateColumn()
   createdAt: Date;

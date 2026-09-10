@@ -7,8 +7,16 @@ export enum UserRole {
 
 export enum CustomerRole {
   PLAYER = 'PLAYER',
+  CAPTAIN = 'CAPTAIN',
   MANAGER = 'MANAGER',
   OFFICIAL = 'OFFICIAL',
+  REFEREE = 'REFEREE',
+  VENUE_OWNER = 'VENUE_OWNER',
+}
+
+export enum AccountType {
+  STAFF = 'STAFF',
+  CUSTOMER = 'CUSTOMER',
 }
 
 export enum Gender {
@@ -30,10 +38,10 @@ export enum PlayerPosition {
 }
 
 export enum GameMode {
-  SPARING = 'sparing',
-  FUNGAME = 'fungame',
-  TOURNAMENT = 'tournament',
-  KNOCKOUT = 'knockout',
+  SPARING = 'SPARING',
+  FUNGAME = 'FUNGAME',
+  TOURNAMENT = 'TOURNAMENT',
+  KNOCKOUT = 'KNOCKOUT',
 }
 
 export enum MatchStatus {
@@ -56,4 +64,16 @@ export enum CardType {
 export enum TeamSide {
   HOME = 'home',
   AWAY = 'away',
+}
+
+export enum PassType {
+  SAAS_MONTHLY = 'SAAS_MONTHLY',
+  OTS_12H = 'OTS_12H',
+  OTS_24H = 'OTS_24H',
+}
+export class ActivePass {
+  type: PassType;
+  activatedAt: Date;
+  expiresAt: Date;
+  isActive: boolean;
 }

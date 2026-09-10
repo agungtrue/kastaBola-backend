@@ -23,4 +23,8 @@ export class User extends BaseEntity {
 
   @Column({ name: 'is_active', type: 'boolean', default: true })
   isActive: boolean;
+
+  @Column({ name: 'google_id', type: 'varchar', length: 255, nullable: true })
+  @Index()
+  googleId: string | null;
 }

@@ -32,15 +32,15 @@ export class Match {
   @Column({ type: 'uuid' })
   homeTeamId: string;
 
-  @Column({ type: 'uuid' })
-  awayTeamId: string;
+  @Column({ type: 'uuid', nullable: true })
+  awayTeamId: string | null;
 
   @Index()
   @Column({ type: 'varchar', length: 6, nullable: true })
-  matchPin: string;
+  matchPin: string | null;
 
   @Column({ type: 'varchar', length: 100, nullable: true, unique: true })
-  refereeToken: string;
+  refereeToken: string | null;
 
   @Column({ type: 'int', default: 15 })
   matchDuration: number;
@@ -52,10 +52,10 @@ export class Match {
   startTime: string;
 
   @Column({ type: 'varchar', length: 255, nullable: true })
-  venueName: string;
+  venueName: string | null;
 
   @Column({ type: 'varchar', length: 120, nullable: true })
-  refereeName: string;
+  refereeName: string | null;
 
   @Column({ type: 'int', default: 0 })
   homeScore: number;

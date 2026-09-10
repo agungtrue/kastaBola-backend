@@ -16,6 +16,9 @@ import { PlayersService } from './modules/players/players.service.js';
 import { AuthModule } from './modules/auth/auth.module.js';
 import { TeamsModule } from './modules/teams/teams.module.js';
 import { PlayersModule } from './modules/players/players.module.js';
+import { MatchesModule } from './modules/matches/matches.module.js';
+import { LeaderboardModule } from './modules/leaderboard/leaderboard.module.js';
+import { AnalyticsModule } from './modules/analytics/analytics.module.js';
 
 // export const { ObserveModule, ObserveInstrument } = createObserveModule();
 
@@ -42,7 +45,10 @@ import { PlayersModule } from './modules/players/players.module.js';
     }),
     AuthModule,
     TeamsModule,
-    PlayersModule
+    PlayersModule,
+    MatchesModule,
+    LeaderboardModule,
+    AnalyticsModule
   ],
   controllers: [AppController],
   providers: [AppService],
